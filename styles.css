@@ -68,11 +68,17 @@ select{
 .answers{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .answerLabbel{
     display: flex;
+}
 
+.errorMessage{
+    border: 2px solid red;
+    padding: 8px;
 }
 
 .hidden{

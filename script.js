@@ -1,3 +1,8 @@
+(function clearStorage(){
+    localStorage.clear();
+})()
+
+
 //Iniciar el QUIZZ
 function start(){
     //Recogemos las opciones para el QUIZZ
@@ -28,18 +33,34 @@ async function getQuestions(url){
     setQuestion();
 }
 
+//Decodificar el formato de texto html en texto normal
+function decodeData(text){
+    let auxiliar = document.createElement('div');
+    auxiliar.innerHTML = text;
+    
+    return auxiliar.textContent;
+}
+
 //Recopilar la data de las preguntas
 function getQuestionsData(questions){
+    console.log(questions);
+
     questions.forEach((q, i) => {
 
         let answers = q.incorrect_answers;
-        answers.push(q.correct_answer);
+        answers.map((answer)=>{
+            decodeData(answer);
+        })
+        console.log(q.correct_answer);
+        let correctAnswer = decodeData(q.correct_answer);
+        answers.push(correctAnswer);
+
         answers = answers.sort(() => Math.random() - 0.5);
 
         localStorage[i] = JSON.stringify({
-            question: q.question,
+            question: decodeData(q.question),
             answers: answers,
-            correct: q.correct_answer
+            correct: correctAnswer
         })
     });
 
@@ -101,13 +122,13 @@ function setAnswers(current){
         let answerText = document.createElement('h3');
         answerText.innerHTML = currentAnswer;
         //Crear labbel y meter input + texto
-        let labbel = document.createElement('labbel');
-        labbel.setAttribute('class', 'answerLabbel')
-        labbel.appendChild(input);
-        labbel.appendChild(answerText);
+        let label = document.createElement('labbel');
+        label.setAttribute('class', 'answerLabbel');
+        label.appendChild(input);
+        label.appendChild(answerText);
         //Meter cada respuesta en el article
         article.setAttribute('class', 'answers');
-        article.appendChild(labbel);
+        article.appendChild(label);
 
     })
 
@@ -115,12 +136,26 @@ function setAnswers(current){
 
 }
 
+//Enviar la respuesta
 function sendResponse(){
-    alert("Respuesta enviada");
+    //Recogemos el input checkeado
     let inputResponse = document.querySelector('input[name="answer"]:checked');
-    let textResponse = inputResponse.nextElementSibling.textContent;
-    console.log(textResponse);
+    //Si el input checkeado existe...
+    if(inputResponse){
+        let textResponse = inputResponse.nextElementSibling.textContent;
+    }else{
+        noAnswered();
+    }
+}
 
+function noAnswered(){
+
+    let errorMessage = document.createElement('h3');
+    errorMessage.setAttribute('class', 'errorMessage');
+    errorMessage.innerHTML = 'You have not responded';
+    let article = document.querySelector('.answers');
+    article.appendChild(errorMessage);
+    
 }
 
 // https://opentdb.com/api_category.php
