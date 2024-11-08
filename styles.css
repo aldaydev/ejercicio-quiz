@@ -1,5 +1,68 @@
 body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+}
+
+main{
+    width: 80%;
+    min-height: 80%;
+    background-color: #f2f2f2;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    padding: 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1, h2{
+    text-align: center;
+    text-wrap: balance;
+}
+
+h1{
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.initialSection,
+.questionSection{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+label{
+    width: 100%;
+    display: block;
+}
+
+h3{
+    text-align: center;
+}
+
+select{
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+
+    padding: 13px;
+    font-size: 1.6rem;
+}
+
+#start{
+    display: block;
+    margin-top: 50px;
+    padding: 20px 40px;
+}
+
+.hidden{
+    display: none;
 }
