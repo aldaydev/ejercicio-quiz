@@ -46,6 +46,7 @@ label{
 
 h3{
     text-align: center;
+    text-transform: uppercase;
 }
 
 select{
@@ -57,10 +58,21 @@ select{
     font-size: 1.6rem;
 }
 
-#start{
+#startBtn,
+#responseBtn{
     display: block;
     margin-top: 50px;
     padding: 20px 40px;
+}
+
+.answers{
+    display: flex;
+    flex-direction: column;
+}
+
+.answerLabbel{
+    display: flex;
+
 }
 
 .hidden{
