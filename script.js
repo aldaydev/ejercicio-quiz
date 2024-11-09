@@ -1,3 +1,4 @@
+//Reset de LocalStorage
 (function clearStorage(){
     localStorage.clear();
 })()
@@ -33,17 +34,8 @@ async function getQuestions(url){
     setQuestion();
 }
 
-//Decodificar el formato de texto html en texto normal
-function decodeData(text){
-    let auxiliar = document.createElement('div');
-    auxiliar.innerHTML = text;
-    
-    return auxiliar.textContent;
-}
-
 //Recopilar la data de las preguntas
 function getQuestionsData(questions){
-    console.log(questions);
 
     questions.forEach((q, i) => {
 
@@ -51,7 +43,6 @@ function getQuestionsData(questions){
         answers.map((answer)=>{
             decodeData(answer);
         })
-        console.log(q.correct_answer);
         let correctAnswer = decodeData(q.correct_answer);
         answers.push(correctAnswer);
 
@@ -64,11 +55,17 @@ function getQuestionsData(questions){
         })
     });
 
-    localStorage.count = JSON.stringify({
-        responsed: 0,
-        correct: 0,
-        inccorect: 0
-    });
+    localStorage.count = 0;
+    localStorage.correct = 0;
+    localStorage.incorrect = 0;
+}
+
+//Decodificar el formato de texto html en texto normal
+function decodeData(text){
+    let auxiliar = document.createElement('div');
+    auxiliar.innerHTML = text;
+    
+    return auxiliar.textContent;
 }
 
 //Ocultar elementos
@@ -79,38 +76,58 @@ function hideElement(element){
 //Disponer la pregunta
 function setQuestion(){
 
+    let currentQuestion = JSON.parse(localStorage.count);
     //Modificar subtítulo con la pregunta
     let subheader = document.getElementById('subheader');
-    let currentQuestion = JSON.parse(localStorage.count).responsed;
     subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question.toUpperCase();
 
-    //Conformar un article con las respuestas y sus radios
-    let filledArticle = setAnswers(currentQuestion);
+    let questSecTest = document.querySelector('.questionSection');
 
-    //Crear el botón de enviar respuesta
-    let responseBtn= document.createElement('button');
-    responseBtn.setAttribute('id', 'responseBtn');
-    responseBtn.setAttribute('onclick', 'sendResponse()');
-    responseBtn.innerText = 'SEND ANSWER';
+    if(questSecTest){
+        //Conformar un article con las respuestas y sus radios
+        let filledArticle = setAnswers(currentQuestion);
+        let responseBtn = document.getElementById('responseBtn');
+        if(currentQuestion == 9){
+            responseBtn.innerText = 'SEND ANSWER AND GET RESULTS';
+        }else{
+            responseBtn.innerText = 'SEND ANSWER';
+        }
+        let questionSection = document.querySelector('.questionSection');
+        questionSection.appendChild(filledArticle);
+        questionSection.appendChild(responseBtn);
 
-    //Crear sección con cada pregunta y meter el article
-    let questionSection = document.createElement('section');
-    questionSection.setAttribute('class', 'questionSection');
-    questionSection.appendChild(filledArticle);
-    questionSection.appendChild(responseBtn);
+    }else{
+        //Conformar un article con las respuestas y sus radios
+        let filledArticle = setAnswers(currentQuestion);
 
-    //Meter la section dentro del main
-    let main = document.querySelector('main');
-    main.appendChild(questionSection);
-    
+        //Crear el botón de enviar respuesta
+        let responseBtn= document.createElement('button');
+        responseBtn.setAttribute('id', 'responseBtn');
+        responseBtn.setAttribute('onclick', 'sendResponse()');
+        responseBtn.innerText = 'SEND ANSWER';
+
+        //Crear sección con cada pregunta y meter el article
+        let questionSection = document.createElement('section');
+        questionSection.setAttribute('class', 'questionSection');
+        questionSection.appendChild(filledArticle);
+        questionSection.appendChild(responseBtn);
+
+        //Meter la section dentro del main
+        let main = document.querySelector('main');
+        main.appendChild(questionSection);
+    }
 }
 
 //Conformar un article con las respuestas y sus radios
 function setAnswers(current){
-    //Crear artículo donde irán las respuestas
-    let article = document.createElement('article');
     //Seleccionamos las respuestas actuales
     let currentAnswers = JSON.parse(localStorage[current]).answers;
+    let article = document.querySelector('.answers');
+    if(article){
+        article.innerHTML = '';
+    }else{
+        article = document.createElement('article');
+    }
     //Recorrer respuestas y disponerlas
     currentAnswers.forEach(currentAnswer => {
         //Crear input de cada respuesta
@@ -120,6 +137,7 @@ function setAnswers(current){
         input.setAttribute('class', 'radio');
         //Crear texto de cada respuesta
         let answerText = document.createElement('h3');
+        answerText.setAttribute('class', 'answerText');
         answerText.innerHTML = currentAnswer;
         //Crear labbel y meter input + texto
         let label = document.createElement('labbel');
@@ -129,33 +147,71 @@ function setAnswers(current){
         //Meter cada respuesta en el article
         article.setAttribute('class', 'answers');
         article.appendChild(label);
-
     })
 
     return article;
-
 }
+
+function resetArticle(article){
+    
+}
+
+//------------------------------
 
 //Enviar la respuesta
 function sendResponse(){
+    let currentQuestion = JSON.parse(localStorage.count);
     //Recogemos el input checkeado
     let inputResponse = document.querySelector('input[name="answer"]:checked');
     //Si el input checkeado existe...
     if(inputResponse){
-        let textResponse = inputResponse.nextElementSibling.textContent;
+        if(currentQuestion == 9){
+            let textResponse = inputResponse.nextElementSibling.textContent;
+            checkAnswers(textResponse);
+
+            getResults();
+        }else{
+            let textResponse = inputResponse.nextElementSibling.textContent;
+            checkAnswers(textResponse);
+            setQuestion();
+        }
     }else{
-        noAnswered();
+        notAnswered();
     }
 }
 
-function noAnswered(){
-
-    let errorMessage = document.createElement('h3');
-    errorMessage.setAttribute('class', 'errorMessage');
-    errorMessage.innerHTML = 'You have not responded';
-    let article = document.querySelector('.answers');
-    article.appendChild(errorMessage);
+function checkAnswers(text){
+    let currentQuestion = JSON.parse(localStorage.count);
+    let correctAnswer = JSON.parse(localStorage[currentQuestion]).correct;
     
+    if(text === correctAnswer){
+        localStorage.correct = parseInt(localStorage.correct) + 1;
+    }else{
+        localStorage.incorrect = parseInt(localStorage.incorrect) + 1;
+    }
+
+    localStorage.count = parseInt(localStorage.count) + 1;
+
+    return JSON.parse(localStorage.count);
+}
+
+function notAnswered(){
+    let errorTest = document.querySelector('.errorMessage');
+    if(!errorTest){
+        let errorMessage = document.createElement('h3');
+        errorMessage.setAttribute('class', 'errorMessage');
+        errorMessage.innerHTML = 'YOU HAVE NOT RESPONDED';
+        let article = document.querySelector('.answers');
+        article.appendChild(errorMessage);
+    }
+}
+
+function getResults(){
+    let correct = JSON.parse(localStorage.correct);
+    let incorrect = JSON.parse(localStorage.incorrect);
+    
+    let questionSection = document.querySelector('.questionSection');
+    questionSection.innerHTML = '';
 }
 
 // https://opentdb.com/api_category.php
