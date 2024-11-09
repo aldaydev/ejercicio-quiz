@@ -26,9 +26,9 @@ async function getQuestions(url){
     //Recopilar data de la API
     getQuestionsData(questions.results);
 
-    //Resetamos el article
-    let article = document.querySelector('.article');
-    article.innerHTML = '';
+    //Recogemos la sección inicial y la oculamos
+    let initialSection = document.querySelector('.initialSection');
+    initialSection.setAttribute('class', 'hidden');
 
     //Disponer la primera pregunta
     setQuestion();
@@ -75,10 +75,6 @@ function decodeData(text){
 
 //Disponer la pregunta
 function setQuestion(){
-
-    //Recogemos la sección inicial
-    let section = document.querySelector('.section');
-
     //Recoger contador de preguntas
     let currentQuestion = JSON.parse(localStorage.count);
 
@@ -87,25 +83,25 @@ function setQuestion(){
     subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question.toUpperCase();
 
     //Recogemos la sección de preguntas y comprobamos si existe
-    let answerLabel = document.querySelector('.answerLabel');
-
-    //Recogemos el botón "responder"
-    let nextBtn = document.getElementById('nextBtn');
+    let questionSection = document.querySelector('.questionSection');
 
     //Si la sección de preguntas ya existia
-    if(answerLabel){
+    if(questionSection){
         //Reescribir el article con las respuestas y sus radios
         let filledArticle = setAnswers(currentQuestion);
 
+        //Recogemos el botón "responder"
+        let answerBtn = document.getElementById('answerBtn');
+
         //Definimos texto del botón si es la última pregunta o no
         if(currentQuestion == 9){
-            nextBtn.innerText = 'SEND ANSWER AND GET RESULTS';
+            answerBtn.innerText = 'SEND ANSWER AND GET RESULTS';
         }else{
-            nextBtn.innerText = 'SEND ANSWER';
+            answerBtn.innerText = 'SEND ANSWER';
         }
 
-        section.appendChild(filledArticle);
-        section.appendChild(nextBtn);
+        questionSection.appendChild(filledArticle);
+        questionSection.appendChild(answerBtn);
 
     }else{
         
@@ -113,12 +109,20 @@ function setQuestion(){
         let filledArticle = setAnswers(currentQuestion);
 
         //Crear el botón de enviar respuesta
-        nextBtn.setAttribute('onclick', 'sendAnswer()');
-        nextBtn.innerText = 'SEND ANSWER';
+        let answerBtn= document.createElement('button');
+        answerBtn.setAttribute('id', 'answerBtn');
+        answerBtn.setAttribute('onclick', 'sendAnswer()');
+        answerBtn.innerText = 'SEND ANSWER';
 
         //Crear sección con cada pregunta y meter el article
-        section.appendChild(filledArticle);
-        section.appendChild(nextBtn);
+        questionSection = document.createElement('section');
+        questionSection.setAttribute('class', 'questionSection');
+        questionSection.appendChild(filledArticle);
+        questionSection.appendChild(answerBtn);
+
+        //Meter la section dentro del main
+        let main = document.querySelector('main');
+        main.appendChild(questionSection);
     }
 }
 
@@ -126,8 +130,12 @@ function setQuestion(){
 function setAnswers(current){
 
     //Creamos o reseteamos el article
-    let article = document.querySelector('.article');
-    article.innerHTML = '';
+    let article = document.querySelector('.answers');
+    if(article){
+        article.innerHTML = '';
+    }else{
+        article = document.createElement('article');
+    }
 
     //Seleccionamos las respuestas actuales
     let currentAnswers = JSON.parse(localStorage[current]).answers;
@@ -153,9 +161,10 @@ function setAnswers(current){
         label.appendChild(answerText);
 
         //Meter cada respuesta en el article
+        article.setAttribute('class', 'answers');
         article.appendChild(label);
     })
-    console.log(article);
+
     //Retornamos el article
     return article;
 }
@@ -230,15 +239,15 @@ function getResults(){
     let incorrect = JSON.parse(localStorage.incorrect);
     
     let questionSection = document.querySelector('.questionSection');
-    let article = document.querySelector('.article');
+    let article = document.querySelector('.answers');
     article.innerHTML = "";
 
     let subheader = document.getElementById('subheader');
     subheader.innerHTML = 'WELL DONE! HERE ARE YOUR RESULTS';
 
-    let nextBtn = document.getElementById('nextBtn');
-    nextBtn.innerText = 'TRY AGAIN!';
-    nextBtn.setAttribute('onclick', 'startAgain()');
+    let answerBtn = document.getElementById('answerBtn');
+    answerBtn.innerText = 'TRY AGAIN!';
+    answerBtn.setAttribute('onclick', 'startAgain()');
 
     let chart = setChart(correct, incorrect);
 
