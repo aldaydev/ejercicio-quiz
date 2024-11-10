@@ -84,7 +84,7 @@ function setQuestion(){
 
     //Modificar subtítulo con la pregunta
     let subheader = document.getElementById('subheader');
-    subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question.toUpperCase();
+    subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question;
 
     //Recogemos la sección de preguntas y comprobamos si existe
     let answerLabel = document.querySelector('.answerLabel');
@@ -155,7 +155,7 @@ function setAnswers(current){
         //Meter cada respuesta en el article
         article.appendChild(label);
     })
-    console.log(article);
+    
     //Retornamos el article
     return article;
 }
@@ -229,12 +229,11 @@ function getResults(){
     let correct = JSON.parse(localStorage.correct);
     let incorrect = JSON.parse(localStorage.incorrect);
     
-    let questionSection = document.querySelector('.questionSection');
     let article = document.querySelector('.article');
     article.innerHTML = "";
 
     let subheader = document.getElementById('subheader');
-    subheader.innerHTML = 'WELL DONE! HERE ARE YOUR RESULTS';
+    subheader.innerHTML = 'Well done! Here are your results!';
 
     let nextBtn = document.getElementById('nextBtn');
     nextBtn.innerText = 'TRY AGAIN!';
@@ -258,8 +257,8 @@ function setChart(correct, incorrect){
                 label: 'Quiz Results',
                 data: [correct, incorrect],  // Resultados del usuario
                 backgroundColor: [
-                    'rgba(75, 192, 192, 0.6)', // Correctas
-                    'rgba(255, 99, 132, 0.6)',  // Incorrectas
+                    'rgba(74, 195, 44, 1)', // Correctas
+                    'rgba(212, 47, 47, 1)',  // Incorrectas
                 ],
                 borderColor: [
                     'rgba(75, 192, 192, 1)',

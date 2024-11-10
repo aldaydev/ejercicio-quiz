@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="./assets/fonts/bangers.css">
+    <link rel="stylesheet" href="./assets/fonts/limelight.css">
+
     <link rel="stylesheet" href="./styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="./script.js" defer></script>
@@ -18,7 +19,7 @@
         <section class="section">
             <article class="article">
                 <label for="category">
-                    <h3>CHOOSE CATEGORY</h3>
+                    <h3 class="category__h3">CATEGORY</h3>
                     <select name="category" id="category">
                         <option value="&category=10">Books</option>
                         <option value="&category=11">Films</option>
@@ -30,7 +31,7 @@
                 
     
                 <label for="difficulty">
-                    <h3>CHOOSE DIFFICULTY</h3>
+                    <h3 class="category__h3">DIFFICULTY</h3>
                     <select name="difficulty" id="difficulty">
                         <option value="&difficulty=easy">Easy</option>
                         <option value="&difficulty=medium">Medium</option>
@@ -40,8 +41,8 @@
             </article>
             
             <button onclick="start()" id="nextBtn">START QUIZ</button>
-
         </section>
     </main>
+    <p class="copyright">Rafa Alday &copy 2024</p>
 </body>
 </html>
