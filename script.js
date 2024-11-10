@@ -259,12 +259,12 @@ function setChart(correct, incorrect){
                 label: 'Quiz Results',
                 data: [correct, incorrect],  // Resultados del usuario
                 backgroundColor: [
-                    'rgba(74, 195, 44, 1)', // Correctas
-                    'rgba(212, 47, 47, 1)',  // Incorrectas
+                    '#e4e1a7ec', // Correctas
+                    '#3e3e36ec',  // Incorrectas
                 ],
                 borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
+                    '#e4e1a7ec',
+                    '#3e3e36ec',
                 ],
                 borderWidth: 1
             }]
@@ -274,9 +274,20 @@ function setChart(correct, incorrect){
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom',  // Posición de la leyenda
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            family: 'Lime',
+                            size: 16
+                        },
+                        padding: 25,
+                    }
                 },
                 tooltip: {
+                    bodyFont:{
+                        family: 'Lime',
+                        size: 16
+                    },
                     callbacks: {
                         label: function(context) {
                             return `${context.label}: ${context.raw}`;
@@ -290,12 +301,12 @@ function setChart(correct, incorrect){
     return canvas;
 }
 
-
+//Recarga la página y vuelve a inicio
 function startAgain(){
     location.reload();
 }
 
-
+//A los 30secs vuelve al inicio
 function autoFinish() {
     let contador = 30;
 
@@ -306,15 +317,15 @@ function autoFinish() {
 
     // Definir el setInterval
     const intervalo = setInterval(() => {
-        contador--; // Disminuir el contador cada segundo
-        returning.textContent = `Volviendo al inicio en: ${contador}`; // Actualizar el texto de la cuenta atrás
+        contador--; 
+        returning.textContent = `Returning to start in: ${contador} seconds`;
 
         // Si el contador llega a 0, recargar la página
         if (contador === 0) {
             clearInterval(intervalo); // Detener el setInterval
-            location.reload(); // Recargar la página
+            location.reload();
         }
-    }, 1000); // Ejecutar cada 1000 ms (1 segundo)
+    }, 1000);
 }
 // https://opentdb.com/api_category.php
 //https://opentdb.com/api.php?amount=10&category=31
