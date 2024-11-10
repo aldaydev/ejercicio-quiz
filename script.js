@@ -242,6 +242,8 @@ function getResults(){
     let chart = setChart(correct, incorrect);
 
     article.appendChild(chart);
+
+    autoFinish();
 }
 
 function setChart(correct, incorrect){
@@ -288,8 +290,31 @@ function setChart(correct, incorrect){
     return canvas;
 }
 
+
 function startAgain(){
     location.reload();
+}
+
+
+function autoFinish() {
+    let contador = 30;
+
+    let section = document.querySelector('section');
+    let returning = document.createElement('h3');
+    returning.setAttribute('class', 'returningText');
+    section.appendChild(returning);
+
+    // Definir el setInterval
+    const intervalo = setInterval(() => {
+        contador--; // Disminuir el contador cada segundo
+        returning.textContent = `Volviendo al inicio en: ${contador}`; // Actualizar el texto de la cuenta atrás
+
+        // Si el contador llega a 0, recargar la página
+        if (contador === 0) {
+            clearInterval(intervalo); // Detener el setInterval
+            location.reload(); // Recargar la página
+        }
+    }, 1000); // Ejecutar cada 1000 ms (1 segundo)
 }
 // https://opentdb.com/api_category.php
 //https://opentdb.com/api.php?amount=10&category=31

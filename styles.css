@@ -232,8 +232,8 @@ select:hover{
     font-family: "Bangers";
 }
 
-.hidden{
-    display: none;
+.returningText{
+    font-size: 1.5rem;
 }
 
 .copyright{
