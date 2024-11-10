@@ -3,7 +3,6 @@
     localStorage.clear();
 })()
 
-
 //Iniciar el QUIZZ
 function start(){
     //Recogemos las opciones para el QUIZZ
@@ -98,11 +97,7 @@ function setQuestion(){
         let filledArticle = setAnswers(currentQuestion);
 
         //Definimos texto del botón si es la última pregunta o no
-        if(currentQuestion == 9){
-            nextBtn.innerText = 'SEND ANSWER AND GET RESULTS';
-        }else{
-            nextBtn.innerText = 'SEND ANSWER';
-        }
+        currentQuestion == 9 ? nextBtn.innerText = 'SEND ANSWER AND GET RESULTS' : nextBtn.innerText = 'SEND ANSWER';
 
         section.appendChild(filledArticle);
         section.appendChild(nextBtn);
@@ -211,11 +206,7 @@ function checkAnswers(text){
     let correctAnswer = JSON.parse(localStorage[currentQuestion]).correct;
     
     //Comparamos respuesta indicada con respuesta correcta
-    if(text === correctAnswer){
-        localStorage.correct = parseInt(localStorage.correct) + 1;
-    }else{
-        localStorage.incorrect = parseInt(localStorage.incorrect) + 1;
-    }
+    text === correctAnswer ? localStorage.correct = parseInt(localStorage.correct) + 1 : localStorage.incorrect = parseInt(localStorage.incorrect) + 1;
 
     //Sumamos una pregunta al contador
     localStorage.count = parseInt(localStorage.count) + 1;
@@ -224,7 +215,7 @@ function checkAnswers(text){
     return JSON.parse(localStorage.count);
 }
 
-
+//Obtenemos los resultados finales
 function getResults(){
     let correct = JSON.parse(localStorage.correct);
     let incorrect = JSON.parse(localStorage.incorrect);
@@ -246,6 +237,7 @@ function getResults(){
     autoFinish();
 }
 
+//Disponemos la gráfica
 function setChart(correct, incorrect){
     //Creamos el canvas
     let canvas = document.createElement('canvas');
@@ -301,6 +293,8 @@ function setChart(correct, incorrect){
     return canvas;
 }
 
+//------------------------------
+
 //Recarga la página y vuelve a inicio
 function startAgain(){
     location.reload();
@@ -327,7 +321,3 @@ function autoFinish() {
         }
     }, 1000);
 }
-// https://opentdb.com/api_category.php
-//https://opentdb.com/api.php?amount=10&category=31
-//https://opentdb.com/api.php?amount=10
-//https://opentdb.com/api.php?amount=10&category=10&difficulty=easy
