@@ -58,7 +58,7 @@ h1, h2{
 }
 
 h1{
-    margin: 40px 0 20PX 0;
+    margin: 40px 30px 20px 30px;
     font-size: 3rem;
     animation: headers 1s ease-in-out;
 }
@@ -89,19 +89,27 @@ h2{
     gap: 10px;
 }
 
-label{
-    width: 50%;
-    display: block;
+.initialLabels{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
+/* label{
+    width: 70%;
+    display: block;
+} */
 
 .category__h3{
     text-align: center;
     font-size: 1.9rem;
+    text-wrap: balance;
 }
 
 select {
     width: 100%;
-    min-width: 220px;
+    min-width: 400px;
     display: block;
     margin: 0 auto;
 

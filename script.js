@@ -3,37 +3,117 @@
     localStorage.clear();
 })()
 
-//Iniciar el QUIZZ
+//Inicialización del QUIZZ
 function start(){
-    //Recogemos las opciones para el QUIZZ
-    const catergory = document.getElementById('category').value;
+    //Recogemos las opciones elegidar por el usuario
+    const category = document.getElementById('category').value;
     const difficulty = document.getElementById('difficulty').value;
+    //Si ha elegido la categoría con MIS PREGUNTAS
+    if(category == 'tarantino'){
+        //Segun DIFICULTAD ELEGIDA, obtenemos las preguntas
+        if(difficulty == '&difficulty=easy'){
+            get10Questions(easyTarantino);
+        }else if(difficulty == '&difficulty=medium'){
+            get10Questions(mediumTarantino);
+        }else if(difficulty == '&difficulty=hard'){
+            get10Questions(hardTarantino);
+        }
+    //Si ha elegido preguntas que viene de la API
+    }else{
+        //Creamos la URL a partir de las opciones
+        let getUrl = 'https://opentdb.com/api.php?amount=10' + category + difficulty;
 
-    //Creamos la URL a partir de las opciones
-    let getUrl = 'https://opentdb.com/api.php?amount=10' + catergory + difficulty;
-
-    //Solicitamos los datos
-    getQuestions(getUrl);
+        //Solicitamos los datos
+        getQuestions(getUrl);
+    }
 }
 
 //Llamar a la API
 async function getQuestions(url){
-    //Llamar y descodificar API
-    let response = await fetch(url);
-    let questions = await response.json();
+    try{
+        //Llamar y descodificar API
+        let response = await fetch(url);
+        let questions = await response.json();
 
-    //Recopilar data de la API
-    getQuestionsData(questions.results);
+        //Si hay algún problema con la petición, generamos nuevo Error
+        if(!response.ok){
+            throw new Error();
+        }else{
+            //Recopilar data de la API en localStorage
+            getQuestionsData(questions.results);
 
-    //Resetamos el article
-    let article = document.querySelector('.article');
-    article.innerHTML = '';
+            //Resetamos el article
+            let article = document.querySelector('.article');
+            article.innerHTML = '';
 
-    //Disponer la primera pregunta
+            //Disponer la primera pregunta
+            setQuestion();
+        }
+        
+    }catch(error){
+        requestError('TOO MANY REQUESTS:');
+    }
+}
+
+//Si la petición da un error
+function requestError(error){
+
+    //ErrorMsg1 -> Indicamos el error
+    const errorMsg1 = document.createElement('h3');
+    errorMsg1.classList.add('category__h3');
+    errorMsg1.style.marginBottom = '0px';
+    errorMsg1.style.color = 'red';
+    errorMsg1.textContent = error;
+
+    //ErrorMsg2 -> Decimos al usuario qué puede hacer
+    const errorMsg2 = document.createElement('h3');
+    errorMsg2.classList.add('category__h3');
+    errorMsg2.style.color = 'red';
+    errorMsg2.style.margin = '0px';
+    errorMsg2.textContent = 'TRY AGAIN IN A FEW SECONDS OR CHOOSE THE "TARANTINO´S" CATEGORY"';
+
+    //Añadimos los mensajes al article
+    const article = document.querySelector('.article');
+    article.appendChild(errorMsg1);
+    article.appendChild(errorMsg2);
+}
+
+//Coger solo 10 de mis preguntas
+function get10Questions(questions){
+    //Aleatorizamos el orden de las preguntas
+    const random = questions.sort(()=> 0.5 - Math.random());
+    //Creamos las preguntas (solo 10)
+    getTarantQuestions(random.slice(0, 10));
+}
+
+//Llamar a mis preguntas
+function getTarantQuestions(questions){
+
+    //Recorremos el array con los datos de cada pregunta
+    questions.forEach((q, i) => {
+        
+        //Aleatorizamos el orden de las respuestas
+        let answers = q.answers;
+        answers = answers.sort(() => Math.random() - 0.5);
+
+        //LocalStorage: Creamos claves por pregunta (preguntas, respuestas, correcta)
+        localStorage[i] = JSON.stringify({
+            question: q.question,
+            answers: q.answers,
+            correct: q.correct
+        })
+    });
+
+    //LocalStorage: Creamos claves contador, correcta e incorrecta
+    localStorage.count = 0;
+    localStorage.correct = 0;
+    localStorage.incorrect = 0;
+
+    //Imprimiremos la primera pregunta
     setQuestion();
 }
 
-//Recopilar la data de las preguntas
+//Recopilar data preguntas API
 function getQuestionsData(questions){
     //Recorremos el array con los datos de cada pregunta
     questions.forEach((q, i) => {
@@ -321,3 +401,60 @@ function autoFinish() {
         }
     }, 1000);
 }
+
+//Arrays con preguntas mías (Tarantino)
+//No te preocupes Davinia, las meto en localStorage :)
+
+const easyTarantino = [
+    { "question": "Reservoir Dogs was the first movie directed by Quentin Tarantino.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "In Pulp Fiction, the character Vincent Vega is portrayed by John Travolta.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Kill Bill is divided into three volumes.", "answers": ["True", "False"], "correct": "False" },
+    { "question": "The Hateful Eight was Tarantino's eighth directed film.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Leonardo DiCaprio starred in Django Unchained.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Inglourious Basterds is set during World War II.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Jackie Brown is based on a novel by Elmore Leonard.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "The main character in Kill Bill is known as 'The Bride.'", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Uma Thurman plays the lead role in Kill Bill.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "In Pulp Fiction, the briefcase's contents are never revealed.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Which actor played Mr. Blonde in Reservoir Dogs?", "answers": ["Harvey Keitel", "Michael Madsen", "Tim Roth", "Steve Buscemi"], "correct": "Michael Madsen" },
+    { "question": "In Pulp Fiction, what is the mysterious item in the briefcase?", "answers": ["A diamond", "Gold", "Unknown", "A rare gun"], "correct": "Unknown" },
+    { "question": "Who stars as Django in Django Unchained?", "answers": ["Will Smith", "Samuel L. Jackson", "Jamie Foxx", "Denzel Washington"], "correct": "Jamie Foxx" },
+    { "question": "In Kill Bill, what is the name of the swordmaker?", "answers": ["Pai Mei", "Bill", "O-Ren", "Hattori Hanzo"], "correct": "Hattori Hanzo" },
+    { "question": "Who composed the soundtrack for Kill Bill?", "answers": ["RZA", "Hans Zimmer", "Danny Elfman", "Howard Shore"], "correct": "RZA" }
+];
+
+const mediumTarantino = [
+    { "question": "Quentin Tarantino won an Oscar for Best Director for Pulp Fiction.", "answers": ["True", "False"], "correct": "False" },
+    { "question": "The Hateful Eight was filmed in Ultra Panavision 70 format.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "Inglourious Basterds was released in 2009.", "answers": ["True", "False"], "correct": "True" },
+    { "question": "In Django Unchained, who plays the character Dr. King Schultz?", "answers": ["Leonardo DiCaprio", "Jamie Foxx", "Christoph Waltz", "Samuel L. Jackson"], "correct": "Christoph Waltz" },
+    { "question": "In Once Upon a Time in Hollywood, which real-life actress is depicted?", "answers": ["Natalie Wood", "Sharon Tate", "Grace Kelly", "Audrey Hepburn"], "correct": "Sharon Tate" },
+    { "question": "What year was Pulp Fiction released?", "answers": ["1992", "1994", "1996", "1998"], "correct": "1994" },
+    { "question": "Which actress plays Shoshanna Dreyfus in Inglourious Basterds?", "answers": ["Melanie Laurent", "Uma Thurman", "Diane Kruger", "Margot Robbie"], "correct": "Melanie Laurent" },
+    { "question": "Who plays Bill in Kill Bill?", "answers": ["David Carradine", "Michael Madsen", "Samuel L. Jackson", "Harvey Keitel"], "correct": "David Carradine" },
+    { "question": "What is the profession of Tim Roth's character in Pulp Fiction?", "answers": ["Bank robber", "Waiter", "Police officer", "Hitman"], "correct": "Bank robber" },
+    { "question": "In Pulp Fiction, what song does Mia Wallace dance to?", "answers": ["Son of a Preacher Man", "Girl, You'll Be a Woman Soon", "You Never Can Tell", "Misirlou"], "correct": "You Never Can Tell" },
+    { "question": "In Kill Bill, which assassin is the first target on The Bride's list?", "answers": ["O-Ren Ishii", "Elle Driver", "Vernita Green", "Budd"], "correct": "Vernita Green" },
+    { "question": "What is the name of Tarantino's character in Pulp Fiction?", "answers": ["Jimmy", "Vince", "Lance", "Jules"], "correct": "Jimmy" },
+    { "question": "Which Tarantino movie is set during the Civil War era?", "answers": ["Pulp Fiction", "Django Unchained", "The Hateful Eight", "Jackie Brown"], "correct": "The Hateful Eight" },
+    { "question": "In Reservoir Dogs, which character dies in the warehouse at the end?", "answers": ["Mr. Orange", "Mr. White", "Mr. Pink", "Mr. Blonde"], "correct": "Mr. White" },
+    { "question": "Who wrote the screenplay for the movie True Romance?", "answers": ["Oliver Stone", "Quentin Tarantino", "Tony Scott", "Martin Scorsese"], "correct": "Quentin Tarantino" }
+];
+
+const hardTarantino = [
+    { "question": "Quentin Tarantino's first screenplay was for which film?", "answers": ["Reservoir Dogs", "True Romance", "Natural Born Killers", "Pulp Fiction"], "correct": "True Romance" },
+    { "question": "Which martial art does The Bride learn from Pai Mei in Kill Bill?", "answers": ["Karate", "Kung Fu", "Tiger Style", "Snake Style"], "correct": "Kung Fu" },
+    { "question": "In Reservoir Dogs, Mr. Blonde's real name is?", "answers": ["Joe Cabot", "Freddy Newandyke", "Vic Vega", "Eddie Bunker"], "correct": "Vic Vega" },
+    { "question": "In Inglourious Basterds, what is Hans Landa's nickname?", "answers": ["The German Hunter", "The Jew Hunter", "The Nazi Hunter", "The Colonel"], "correct": "The Jew Hunter" },
+    { "question": "In Kill Bill, which musical instrument is played by Bill?", "answers": ["Piano", "Guitar", "Trumpet", "Flute"], "correct": "Flute" },
+    { "question": "What is the name of the diner where Pulp Fiction's opening scene takes place?", "answers": ["Jack Rabbit Slim's", "Big Kahuna Burger", "Hawthorne Grill", "Jack's Diner"], "correct": "Hawthorne Grill" },
+    { "question": "In Django Unchained, what type of doctor is Dr. King Schultz?", "answers": ["Medical Doctor", "Dentist", "Psychiatrist", "Historian"], "correct": "Dentist" },
+    { "question": "Who is the actress that starred in both Jackie Brown and Kill Bill?", "answers": ["Pam Grier", "Vivica A. Fox", "Daryl Hannah", "Uma Thurman"], "correct": "None" },
+    { "question": "In Pulp Fiction, how many times does Jules say the word 'righteous'?", "answers": ["3", "2", "5", "1"], "correct": "3" },
+    { "question": "Who played Mr. Blue in Reservoir Dogs?", "answers": ["Tim Roth", "Eddie Bunker", "Harvey Keitel", "Chris Penn"], "correct": "Eddie Bunker" },
+    { "question": "Which Tarantino film was originally titled 'Black Mask'?", "answers": ["Reservoir Dogs", "Jackie Brown", "Kill Bill", "Inglourious Basterds"], "correct": "Jackie Brown" },
+    { "question": "What was the original title for Inglourious Basterds?", "answers": ["Once Upon a War", "The Jew Hunter", "The Bastards", "Operation Kino"], "correct": "The Bastards" },
+    { "question": "In Pulp Fiction, Mia Wallace overdoses on which drug?", "answers": ["Heroin", "Cocaine", "LSD", "Ecstasy"], "correct": "Heroin" },
+    { "question": "Which Italian composer scored the soundtrack for The Hateful Eight?", "answers": ["Ennio Morricone", "Nino Rota", "Angelo Badalamenti", "Gianni Ferrio"], "correct": "Ennio Morricone" },
+    { "question": "In Kill Bill, what does The Bride use to bury herself out of a coffin?", "answers": ["Her hands", "A sword", "A nail", "A flashlight"], "correct": "Her hands" }
+];

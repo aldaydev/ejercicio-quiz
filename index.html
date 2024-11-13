@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./assets/fonts/limelight.css">
 
     <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./responsive.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="./script.js" defer></script>
 
@@ -18,7 +19,7 @@
         <h2 id="subheader">Choose your options and show what you know!</h2>
         <section class="section">
             <article class="article">
-                <label for="category">
+                <label for="category" class="initialLabels">
                     <h3 class="category__h3">CATEGORY</h3>
                     <select name="category" id="category">
                         <option value="&category=10">Books</option>
@@ -26,11 +27,12 @@
                         <option value="&category=12">Music</option>
                         <option value="&category=14">Television</option>
                         <option value="&category=15">Video Games</option>
+                        <option value="tarantino">(Extra) Tarantino</option>
                     </select>
                 </label>
                 
     
-                <label for="difficulty">
+                <label for="difficulty" class="initialLabels">
                     <h3 class="category__h3">DIFFICULTY</h3>
                     <select name="difficulty" id="difficulty">
                         <option value="&difficulty=easy">Easy</option>
