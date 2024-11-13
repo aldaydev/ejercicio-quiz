@@ -302,7 +302,7 @@ function startAgain(){
 
 //A los 30secs vuelve al inicio
 function autoFinish() {
-    let contador = 30;
+    let contador = 45;
 
     let section = document.querySelector('section');
     let returning = document.createElement('h3');
