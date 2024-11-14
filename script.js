@@ -69,7 +69,7 @@ function requestError(error){
     errorMsg2.classList.add('category__h3');
     errorMsg2.style.color = 'red';
     errorMsg2.style.margin = '0px';
-    errorMsg2.textContent = 'TRY AGAIN IN A FEW SECONDS OR CHOOSE THE "TARANTINO´S" CATEGORY"';
+    errorMsg2.textContent = 'TRY AGAIN IN A FEW SECONDS OR CHOOSE THE "TARANTINO´S" CATEGORY';
 
     //Añadimos los mensajes al article
     const article = document.querySelector('.article');
