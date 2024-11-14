@@ -305,9 +305,19 @@ function getResults(){
     let article = document.querySelector('.article');
     article.innerHTML = "";
 
-    //Cambiamos el texto del subtitulo
+    //Cambiamos el texto del subtitulo en función de resultados
     let subheader = document.getElementById('subheader');
-    subheader.innerHTML = 'Well done! Here are your results!';
+    
+    if(incorrect == 0){
+        subheader.innerHTML = 'You got them all right, impressive!!';
+    }else if (incorrect == 10){
+        subheader.innerHTML = "Oops... You haven't gotten even one right!!";
+    }else if(correct < incorrect){
+        subheader.innerHTML = 'More mistakes than successes... Next time will be better!';
+    }else{
+        subheader.innerHTML = 'Well done! Here are your results!';
+    }
+    
 
     //Reasignamos el botón
     let nextBtn = document.getElementById('nextBtn');
