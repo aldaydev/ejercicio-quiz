@@ -18,7 +18,7 @@ function start(){
         }else if(difficulty == '&difficulty=hard'){
             get10Questions(hardTarantino);
         }
-    //Si ha elegido preguntas que viene de la API
+    //Si ha elegido preguntas de la API
     }else{
         //Creamos la URL a partir de las opciones
         let getUrl = 'https://opentdb.com/api.php?amount=10' + category + difficulty;
@@ -49,7 +49,6 @@ async function getQuestions(url){
             //Disponer la primera pregunta
             setQuestion();
         }
-        
     }catch(error){
         requestError('TOO MANY REQUESTS:');
     }
@@ -78,7 +77,7 @@ function requestError(error){
     article.appendChild(errorMsg2);
 }
 
-//Coger solo 10 de mis preguntas
+//Coger solo 10 de MIS PREGUNTAS
 function get10Questions(questions){
     //Aleatorizamos el orden de las preguntas
     const random = questions.sort(()=> 0.5 - Math.random());
@@ -86,7 +85,7 @@ function get10Questions(questions){
     getTarantQuestions(random.slice(0, 10));
 }
 
-//Llamar a mis preguntas
+//Almacenar a MIS PREGUNTAS
 function getTarantQuestions(questions){
 
     //Recorremos el array con los datos de cada pregunta
@@ -113,7 +112,7 @@ function getTarantQuestions(questions){
     setQuestion();
 }
 
-//Recopilar data preguntas API
+//Almacenar data preguntas API
 function getQuestionsData(questions){
     //Recorremos el array con los datos de cada pregunta
     questions.forEach((q, i) => {
@@ -165,13 +164,13 @@ function setQuestion(){
     let subheader = document.getElementById('subheader');
     subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question;
 
-    //Recogemos la sección de preguntas y comprobamos si existe
-    let answerLabel = document.querySelector('.answerLabel');
-
-    //Recogemos el botón "responder"
+    //Recogemos el botón "responder" para modificarlo más adelante
     let nextBtn = document.getElementById('nextBtn');
 
-    //Si la sección de preguntas ya existia
+    //Recogemos la sección de preguntas para comprobar si existe
+    let answerLabel = document.querySelector('.answerLabel');
+
+    //Si la sección de preguntas YA EXISTIA
     if(answerLabel){
         //Reescribir el article con las respuestas y sus radios
         let filledArticle = setAnswers(currentQuestion);
@@ -179,19 +178,21 @@ function setQuestion(){
         //Definimos texto del botón si es la última pregunta o no
         currentQuestion == 9 ? nextBtn.innerText = 'SEND ANSWER AND GET RESULTS' : nextBtn.innerText = 'SEND ANSWER';
 
+        //Metemos lo anterior en la sección
         section.appendChild(filledArticle);
         section.appendChild(nextBtn);
 
+    //Si la sección de preguntas NO EXISTIA
     }else{
         
         //Conformar un article con las respuestas y sus radios
         let filledArticle = setAnswers(currentQuestion);
 
-        //Crear el botón de enviar respuesta
+        //Editamos el botón
         nextBtn.setAttribute('onclick', 'sendAnswer()');
         nextBtn.innerText = 'SEND ANSWER';
 
-        //Crear sección con cada pregunta y meter el article
+        //Metemos lo anterior en la sección
         section.appendChild(filledArticle);
         section.appendChild(nextBtn);
     }
@@ -200,7 +201,7 @@ function setQuestion(){
 //Crear/reescribir article con las respuestas y sus radios
 function setAnswers(current){
 
-    //Creamos o reseteamos el article
+    //Reseteamos el article
     let article = document.querySelector('.article');
     article.innerHTML = '';
 
@@ -210,13 +211,13 @@ function setAnswers(current){
     //Recorrer respuestas y disponerlas
     currentAnswers.forEach(currentAnswer => {
 
-        //Crear input de cada respuesta
+        //Crear input por respuesta
         let input = document.createElement('input');
         input.setAttribute('type', 'radio');
         input.setAttribute('name', 'answer');
         input.setAttribute('class', 'radio');
 
-        //Crear texto de cada respuesta
+        //Crear texto por respuesta
         let answerText = document.createElement('h3');
         answerText.setAttribute('class', 'answerText');
         answerText.innerHTML = currentAnswer;
@@ -254,7 +255,7 @@ function sendAnswer(){
             checkAnswers(textResponse);
             getResults();
         
-        //ULTIMA PREGUNTA: Recogemos datos y vamos a otra pregunta
+        //NO ULTIMA PREGUNTA: Recogemos datos y vamos a otra pregunta
         }else{
             let textResponse = inputResponse.nextElementSibling.textContent;
             checkAnswers(textResponse);
@@ -267,17 +268,16 @@ function sendAnswer(){
     }
 }
 
-//Mensaje de error si no marcas respuesta
+//Animación de error si no marcas respuesta
 function notAnswered(){
     let labels = Array.from(document.querySelectorAll('.answerLabel'));
-    let notResponsed = document.querySelector('.notResponsed');
+    //Aplicamos la animación a cada elemento
     labels.forEach((label)=>{
-        label.classList.remove('notResponsed'); // Quita la clase de animación
-        void label.offsetWidth; // "Reflujo" para reiniciar la animación en el DOM
-        label.classList.add('notResponsed'); // Agrega la clase de animación nuevamente
+        label.classList.remove('notResponsed'); //La quitamos por si es la 2º vez
+        void label.offsetWidth; // Reinicia la animación al quitar y poner la clase
+        label.classList.add('notResponsed'); //Ponemos la clase con la animación
     })
 }
-
 
 //Comprueba respuesta y añade contadores(responsed, correct, incorrect)
 function checkAnswers(text){
@@ -291,29 +291,34 @@ function checkAnswers(text){
     //Sumamos una pregunta al contador
     localStorage.count = parseInt(localStorage.count) + 1;
 
-    //Retornamos el numero de pregunta actualizado (Creo que puedo quitarlo)
+    //Retornamos el numero de pregunta actualizado
     return JSON.parse(localStorage.count);
 }
 
 //Obtenemos los resultados finales
 function getResults(){
+    //Recogemos contador correctas e incorrectas
     let correct = JSON.parse(localStorage.correct);
     let incorrect = JSON.parse(localStorage.incorrect);
     
+    //Reseteamos el articulo
     let article = document.querySelector('.article');
     article.innerHTML = "";
 
+    //Cambiamos el texto del subtitulo
     let subheader = document.getElementById('subheader');
     subheader.innerHTML = 'Well done! Here are your results!';
 
+    //Reasignamos el botón
     let nextBtn = document.getElementById('nextBtn');
     nextBtn.innerText = 'TRY AGAIN!';
     nextBtn.setAttribute('onclick', 'startAgain()');
 
+    //Creamos la tabla y añadimos al article
     let chart = setChart(correct, incorrect);
-
     article.appendChild(chart);
 
+    //Al pasar 45 segundos, reiniciamos la app
     autoFinish();
 }
 
@@ -324,19 +329,19 @@ function setChart(correct, incorrect){
     canvas.id = 'resultados-graph';
 
     new Chart(canvas, {
-        type: 'pie',  // o 'doughnut' si prefieres un gráfico con un agujero en el centro
+        type: 'pie',  // Hace que sea circular
         data: {
-            labels: ['Correct', 'Incorrect'],  // Etiquetas para cada sección
+            labels: ['Correct', 'Incorrect'],
             datasets: [{
                 label: 'Quiz Results',
-                data: [correct, incorrect],  // Resultados del usuario
+                data: [correct, incorrect],  // Resultados
                 backgroundColor: [
-                    '#e4e1a7ec', // Correctas
-                    '#3e3e36ec',  // Incorrectas
+                    '#e4e1a7ec', // Color Correctas
+                    '#3e3e36ec',  // Color Incorrectas
                 ],
                 borderColor: [
-                    '#e4e1a7ec',
-                    '#3e3e36ec',
+                    '#e4e1a7ec', // Borde Correctas
+                    '#3e3e36ec', // Borde Incorrectas
                 ],
                 borderWidth: 1
             }]
@@ -349,7 +354,7 @@ function setChart(correct, incorrect){
                     position: 'bottom',
                     labels: {
                         font: {
-                            family: 'Lime',
+                            family: 'Lime', //Fuente personalizada
                             size: 16
                         },
                         padding: 25,
@@ -357,7 +362,7 @@ function setChart(correct, incorrect){
                 },
                 tooltip: {
                     bodyFont:{
-                        family: 'Lime',
+                        family: 'Lime', //Fuente personalizada
                         size: 16
                     },
                     callbacks: {
@@ -380,10 +385,11 @@ function startAgain(){
     location.reload();
 }
 
-//A los 30secs vuelve al inicio
+//A los 45secs vuelve al inicio
 function autoFinish() {
     let contador = 45;
 
+    //Creamos un h3 con texto y lo metemos en la sección
     let section = document.querySelector('section');
     let returning = document.createElement('h3');
     returning.setAttribute('class', 'returningText');
@@ -391,6 +397,7 @@ function autoFinish() {
 
     // Definir el setInterval
     const intervalo = setInterval(() => {
+        //Cada segundo el contador baja y lo incluimos en el h3
         contador--; 
         returning.textContent = `Returning to start in: ${contador} seconds`;
 
@@ -403,7 +410,7 @@ function autoFinish() {
 }
 
 //Arrays con preguntas mías (Tarantino)
-//No te preocupes Davinia, las meto en localStorage :)
+//No te preocupes, Davinia, las gestiono en localStorage :)
 
 const easyTarantino = [
     { "question": "Reservoir Dogs was the first movie directed by Quentin Tarantino.", "answers": ["True", "False"], "correct": "True" },
