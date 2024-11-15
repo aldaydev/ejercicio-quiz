@@ -1,29 +1,29 @@
-@media screen and (max-width:770px) {
+@media screen and (max-width:1370px) {
     h1{
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     h2{
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
 
     .category__h3{
-        font-size: 1.7rem;
+        font-size: 1.5rem;
     }
 
     select {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
 
         /*Cambios símbolo del select*/
         background-image: url('./assets/img/select_icon_20px.png');
     }
 
     #nextBtn{
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
 
     .answerText{
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
 }
 
