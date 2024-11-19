@@ -1,11 +1,7 @@
-//Reset de sessionStorage
+//Reset de LocalStorage
 (function clearStorage(){
-    sessionStorage.clear();
+    localStorage.clear();
 })()
-
-if(localStorage.length > 0){
-    const resultSecction = document.createElement('section');
-}
 
 //Inicialización del QUIZZ
 function start(){
@@ -43,7 +39,7 @@ async function getQuestions(url){
         if(!response.ok){
             throw new Error();
         }else{
-            //Recopilar data de la API en sessionStorage
+            //Recopilar data de la API en localStorage
             getQuestionsData(questions.results);
 
             //Resetamos el article
@@ -99,18 +95,18 @@ function getTarantQuestions(questions){
         let answers = q.answers;
         answers = answers.sort(() => Math.random() - 0.5);
 
-        //sessionStorage: Creamos claves por pregunta (preguntas, respuestas, correcta)
-        sessionStorage[i] = JSON.stringify({
+        //LocalStorage: Creamos claves por pregunta (preguntas, respuestas, correcta)
+        localStorage[i] = JSON.stringify({
             question: q.question,
             answers: q.answers,
             correct: q.correct
         })
     });
 
-    //sessionStorage: Creamos claves contador, correcta e incorrecta
-    sessionStorage.count = 0;
-    sessionStorage.correct = 0;
-    sessionStorage.incorrect = 0;
+    //LocalStorage: Creamos claves contador, correcta e incorrecta
+    localStorage.count = 0;
+    localStorage.correct = 0;
+    localStorage.incorrect = 0;
 
     //Imprimiremos la primera pregunta
     setQuestion();
@@ -133,19 +129,18 @@ function getQuestionsData(questions){
         //Aleatorizamos el orden de las respuestas
         answers = answers.sort(() => Math.random() - 0.5);
 
-        //sessionStorage: Creamos claves por pregunta (preguntas, respuestas, correcta)
-        sessionStorage[i] = JSON.stringify({
+        //LocalStorage: Creamos claves por pregunta (preguntas, respuestas, correcta)
+        localStorage[i] = JSON.stringify({
             question: decodeData(q.question),
             answers: answers,
             correct: correctAnswer
         })
     });
 
-    //sessionStorage: Creamos claves contador, correcta e incorrecta
-    sessionStorage.count = 0;
-    sessionStorage.correct = 0;
-    sessionStorage.incorrect = 0;
-    localStorage.total = 1;
+    //LocalStorage: Creamos claves contador, correcta e incorrecta
+    localStorage.count = 0;
+    localStorage.correct = 0;
+    localStorage.incorrect = 0;
 }
 
 //Decodificar el formato de texto html en texto normal
@@ -163,11 +158,11 @@ function setQuestion(){
     let section = document.querySelector('.section');
 
     //Recoger contador de preguntas
-    let currentQuestion = JSON.parse(sessionStorage.count);
+    let currentQuestion = JSON.parse(localStorage.count);
 
     //Modificar subtítulo con la pregunta
     let subheader = document.getElementById('subheader');
-    subheader.innerHTML = JSON.parse(sessionStorage[currentQuestion]).question;
+    subheader.innerHTML = JSON.parse(localStorage[currentQuestion]).question;
 
     //Recogemos el botón "responder" para modificarlo más adelante
     let nextBtn = document.getElementById('nextBtn');
@@ -211,7 +206,7 @@ function setAnswers(current){
     article.innerHTML = '';
 
     //Seleccionamos las respuestas actuales
-    let currentAnswers = JSON.parse(sessionStorage[current]).answers;
+    let currentAnswers = JSON.parse(localStorage[current]).answers;
 
     //Recorrer respuestas y disponerlas
     currentAnswers.forEach(currentAnswer => {
@@ -246,7 +241,7 @@ function setAnswers(current){
 //Enviar la respuesta
 function sendAnswer(){
     //Recogemos el contador de preguntas
-    let currentQuestion = JSON.parse(sessionStorage.count);
+    let currentQuestion = JSON.parse(localStorage.count);
 
     //Recogemos el input checkeado
     let inputResponse = document.querySelector('input[name="answer"]:checked');
@@ -287,24 +282,24 @@ function notAnswered(){
 //Comprueba respuesta y añade contadores(responsed, correct, incorrect)
 function checkAnswers(text){
     //Recogemos contador preguntas y respuesta correcta
-    let currentQuestion = JSON.parse(sessionStorage.count);
-    let correctAnswer = JSON.parse(sessionStorage[currentQuestion]).correct;
+    let currentQuestion = JSON.parse(localStorage.count);
+    let correctAnswer = JSON.parse(localStorage[currentQuestion]).correct;
     
     //Comparamos respuesta indicada con respuesta correcta
-    text === correctAnswer ? sessionStorage.correct = parseInt(sessionStorage.correct) + 1 : sessionStorage.incorrect = parseInt(sessionStorage.incorrect) + 1;
+    text === correctAnswer ? localStorage.correct = parseInt(localStorage.correct) + 1 : localStorage.incorrect = parseInt(localStorage.incorrect) + 1;
 
     //Sumamos una pregunta al contador
-    sessionStorage.count = parseInt(sessionStorage.count) + 1;
+    localStorage.count = parseInt(localStorage.count) + 1;
 
     //Retornamos el numero de pregunta actualizado
-    return JSON.parse(sessionStorage.count);
+    return JSON.parse(localStorage.count);
 }
 
 //Obtenemos los resultados finales
 function getResults(){
     //Recogemos contador correctas e incorrectas
-    let correct = JSON.parse(sessionStorage.correct);
-    let incorrect = JSON.parse(sessionStorage.incorrect);
+    let correct = JSON.parse(localStorage.correct);
+    let incorrect = JSON.parse(localStorage.incorrect);
     
     //Reseteamos el articulo
     let article = document.querySelector('.article');
@@ -332,8 +327,6 @@ function getResults(){
     //Creamos la tabla y añadimos al article
     let chart = setChart(correct, incorrect);
     article.appendChild(chart);
-
-    resultados(correct, incorrect);
 
     //Al pasar 45 segundos, reiniciamos la app
     autoFinish();
@@ -426,32 +419,8 @@ function autoFinish() {
     }, 1000);
 }
 
-//Rolectamos los resultados finales en localStorage
-function resultados(correct, incorrect){
-    
-    localStorage.total = parseInt(localStorage.total) + 1;
-
-    let resultadoActual = {aciertos: correct, errores: incorrect};
-
-    localStorage.aciertos = parseInt((localStorage.aciertos || 0)) + correct;
-    localStorage.errores = parseInt((localStorage.errores || 0)) + incorrect;
-
-    // if(localStorage.resultados){
-    //     let localRes = JSON.parse(localStorage.resultados);
-    //     localRes.push(resultadoActual);
-    //     localStorage.resultados = JSON.stringify(localRes);
-
-    // }else{
-    //     localStorage.resultados = JSON.stringify([{aciertos: correct, errores: incorrect}]);
-    //     JSON.parse(localStorage.resultados).push(resultadoActual);
-    // }
-
-}
-
-
-
 //Arrays con preguntas mías (Tarantino)
-//No te preocupes, Davinia, las gestiono en sessionStorage :)
+//No te preocupes, Davinia, las gestiono en localStorage :)
 
 const easyTarantino = [
     { "question": "Reservoir Dogs was the first movie directed by Quentin Tarantino.", "answers": ["True", "False"], "correct": "True" },
