@@ -12,7 +12,7 @@ FUNCIONALIDADES IMPLEMENTADAS:
 
 2. MANEJO DE ERRORES: Si hubiera cualquier error en la solicitud a la API, aparecerá un error en pantalla indicándoselo al usuario.
 
-3. LOCAL STORAGE: Una vez elegidas las opciones, la batería de preguntas resultantes (así como las respuestas erroneas y correctas) se almacenarán en localstorage. También así un contador de preguntas respondidas, aciertos y errores.
+3. LOCAL STORAGE / SESSION STORAGE: Una vez elegidas las opciones, la batería de preguntas resultantes (así como las respuestas erroneas y correctas) se almacenarán en sessionstorage. También así un contador de preguntas respondidas, aciertos y errores. Una vez finalizada la partida, almacenaremos la suma de las partidas en localStorage.
 
 3. SPA: Toda la página está hecha en una sola página, bien creando componentes nuevos en cada estado, bien editando los existentes. Especial importancia al único botón de la página, que irá cambiando su manejador de eventos para: a) iniciar el quiz, b) enviar pregunta c) Enviar última pregunta y mostrar resultados d) Empezar de nuevo
 
@@ -20,7 +20,7 @@ FUNCIONALIDADES IMPLEMENTADAS:
 
 5. RESPUESTAS MODIFICABLES: Al indicar la respuesta elegida, se destaca con estilos. El usuario tendrá la opción de cambiar de respuesta antes de enviarla.
 
-6. GRÁFICA FINAL: Al final de Quiz se mostrará una gráfica circular con los resultados.
+6. GRÁFICA FINAL: Al final de Quiz se mostrará una gráfica circular con los resultados. A su vez, a partir de la primera partida aparecerá una gráfica con resultados generales.
 
 7. RESET AUTOMÁTICO: En la pantalla final, junto con la gráfica, aparecerá un contador que nos indica que en 45segundos volveremos a la pantalla de inicio.
 

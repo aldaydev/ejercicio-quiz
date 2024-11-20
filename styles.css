@@ -34,7 +34,7 @@ main{
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     gap: 20px;
 
@@ -65,6 +65,8 @@ h1{
 
 h2{
     font-size: 2rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 @keyframes headers {
@@ -94,17 +96,15 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 20px;
 }
-
-/* label{
-    width: 70%;
-    display: block;
-} */
 
 .category__h3{
     text-align: center;
     font-size: 1.9rem;
     text-wrap: balance;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 select {
@@ -137,12 +137,13 @@ select:hover{
     padding-left: 20px;
 }
 
-#nextBtn{
+#nextBtn,
+.clearBtn{
     font-family: inherit;
     font-size: 2rem;
     letter-spacing: 2px;
     display: block;
-    margin-top: 50px;
+    margin-top: 0;
     margin-bottom: 20px;
     padding: 20px 40px;
     background-color: var(--color-dark);
@@ -154,7 +155,7 @@ select:hover{
     transition: background .3s ease-in-out, color .3s ease-in-out;
 }
 
-#nextBtn:hover{
+#nextBtn:hover, .clearBtn:hover{
     background-color: var(--color-bg);
     color: var(--color-dark);
 }
@@ -195,7 +196,7 @@ select:hover{
     display: block;
     text-align: center;
     margin: 0;
-    padding: 20px;
+    padding: 15px;
     user-select: none;
     transition: background-color .2s ease-in-out;
 }
@@ -237,11 +238,15 @@ select:hover{
 }
 
 #resultados-graph{
+    width: 100%;
+    height: 500px;
     font-family: "Bangers";
+    margin: 20px;
 }
 
 .returningText{
     font-size: 1.5rem;
+    text-align: center;
 }
 
 .copyright{
@@ -258,3 +263,19 @@ select:hover{
         opacity: 1;
     }
 }
+
+.resultSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hidden{
+    display: none;
+}
+
+#clearBtn{
+    margin-top: 20px;
+}
+
+

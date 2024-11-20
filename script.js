@@ -1,14 +1,52 @@
-//Reset de sessionStorage
+//Al iniciar/recargar la página
 (function clearStorage(){
+
+    //Limpiamos sessionStorage
     sessionStorage.clear();
+
+    //Creamos la sección de los resultados globales
+    const resultSection = document.createElement('section');
+    resultSection.setAttribute('id', 'resultSection');
+    resultSection.setAttribute('class', 'resultSection');
+    const resultTitle = document.createElement('h2');
+    resultTitle.textContent = '***TOTAL RESULTS***';
+    
+    resultSection.appendChild(resultTitle);
+
+    //Si NO ha habido partidas anteriores...
+    if(localStorage.total == 0 || !localStorage.total){
+        const resultMsg = document.createElement('h2');
+        resultMsg.textContent = 'PLAY A GAME AND SEE HERE YOUR GLOBAL RESULTS!';
+        resultSection.appendChild(resultMsg);
+    //Si ha habido partidas anteriores...
+    }else{
+        const resultSubtitle = document.createElement('h2');
+        resultSubtitle.textContent = `GAMES PLAYED: ${localStorage.total}`;
+        resultSection.appendChild(resultSubtitle);
+        let chart = setChart(localStorage.aciertos, localStorage.errores);
+        resultSection.appendChild(chart);
+        const clearBtn = document.createElement('button');
+        clearBtn.textContent = 'CLEAR RESULTS';
+        clearBtn.setAttribute('id', 'clearBtn');
+        clearBtn.setAttribute('class', 'clearBtn');
+        clearBtn.setAttribute('onclick', 'clearResults()');
+        resultSection.appendChild(clearBtn);
+    }
+
+    const main = document.querySelector('main');
+    main.appendChild(resultSection);
+    
 })()
 
-if(localStorage.length > 0){
-    const resultSecction = document.createElement('section');
+//Limpiar partidas anteriores
+function clearResults(){
+    localStorage.clear();
+    location.reload();
 }
 
 //Inicialización del QUIZZ
 function start(){
+
     //Recogemos las opciones elegidar por el usuario
     const category = document.getElementById('category').value;
     const difficulty = document.getElementById('difficulty').value;
@@ -145,7 +183,7 @@ function getQuestionsData(questions){
     sessionStorage.count = 0;
     sessionStorage.correct = 0;
     sessionStorage.incorrect = 0;
-    localStorage.total = 1;
+    localStorage.total = (localStorage.total || 0);
 }
 
 //Decodificar el formato de texto html en texto normal
@@ -158,6 +196,9 @@ function decodeData(text){
 
 //Disponer la pregunta
 function setQuestion(){
+
+    const resultSection = document.getElementById('resultSection');
+    resultSection.classList.add('hidden');
 
     //Recogemos la sección inicial
     let section = document.querySelector('.section');
@@ -364,7 +405,7 @@ function setChart(correct, incorrect){
             }]
         },
         options: {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -426,28 +467,15 @@ function autoFinish() {
     }, 1000);
 }
 
-//Rolectamos los resultados finales en localStorage
+//Recolectamos los resultados finales en localStorage
 function resultados(correct, incorrect){
     
     localStorage.total = parseInt(localStorage.total) + 1;
 
-    let resultadoActual = {aciertos: correct, errores: incorrect};
-
     localStorage.aciertos = parseInt((localStorage.aciertos || 0)) + correct;
     localStorage.errores = parseInt((localStorage.errores || 0)) + incorrect;
 
-    // if(localStorage.resultados){
-    //     let localRes = JSON.parse(localStorage.resultados);
-    //     localRes.push(resultadoActual);
-    //     localStorage.resultados = JSON.stringify(localRes);
-
-    // }else{
-    //     localStorage.resultados = JSON.stringify([{aciertos: correct, errores: incorrect}]);
-    //     JSON.parse(localStorage.resultados).push(resultadoActual);
-    // }
-
 }
-
 
 
 //Arrays con preguntas mías (Tarantino)
