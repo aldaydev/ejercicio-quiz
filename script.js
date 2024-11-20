@@ -149,6 +149,7 @@ function getTarantQuestions(questions){
     sessionStorage.count = 0;
     sessionStorage.correct = 0;
     sessionStorage.incorrect = 0;
+    localStorage.total = (localStorage.total || 0);
 
     //Imprimiremos la primera pregunta
     setQuestion();
